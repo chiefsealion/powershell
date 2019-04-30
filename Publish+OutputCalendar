@@ -1,0 +1,7 @@
+#Connect to Office 365
+
+#Publish Calendar#
+Set-MailboxCalendarFolder calroom1:\calendar -PublishEnabled:$true
+
+#Output .ics and .html URL to .txt file
+Get-MailboxCalendarFolder calroom1:\calendar | Out-File c:\sample.txt
