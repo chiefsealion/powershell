@@ -1,0 +1,3 @@
+#Connect to Exchange/Office 365
+
+Set-Mailbox -Identity "Sea Lion" -ForwardingSmtpAddress "leon_marino@bmoat.com"
