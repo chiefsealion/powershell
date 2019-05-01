@@ -1,0 +1,6 @@
+#Connect to Office 365
+
+
+#Create user in Office 365, Assign License, Generate Random Password, And output into txt file
+
+New-MsolUser -DisplayName "Sea Lion" -FirstName Sea -LastName Lion -UserPrincipalName SeaLion@bmoat.com -UsageLocation US -LicenseAssignment reseller-account:O365_BUSINESS_ESSENTIALS | Out-File c:\users\sealion\desktop\user.txt
