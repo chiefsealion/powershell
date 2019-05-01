@@ -1,0 +1,5 @@
+#Connect to Office365
+
+#Change password, force user to change at next sign-in with randomly generated password
+
+Set-MsolUserPassword -UserPrincipalName "sealion@bmoat.com" -ForceChangePassword | Out-File c:\users\sealion\desktop\password.txt
