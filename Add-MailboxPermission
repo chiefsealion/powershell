@@ -1,0 +1,11 @@
+#Connect to Office365
+
+#Get the Permissions of the mailbox
+
+Get-MailboxPermission "sealion@bmoat.com"
+
+
+
+#Give a user full access to this particular mailbox
+
+Add-MailboxPermission -Identity "sealion@bmoat.com" -User "Leon Marino" -AccessRights FullAccess -InheritanceType All
