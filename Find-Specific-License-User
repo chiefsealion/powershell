@@ -1,0 +1,9 @@
+#Connect to Office365
+
+#Find the licenses available to company
+
+Get-MsolAccountSku
+
+#Find who is using which specific license
+
+Get-MsolUser | Where-Object {($_.licenses).AccountSkuId -match "EnterprisePremium"}
