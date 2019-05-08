@@ -1,1 +1,1 @@
-Remove-MailboxPermission -Identity Test1 -User Test2 -AccessRights FullAccess -InheritanceType All
+Remove-MailboxPermission -Identity sealion@bmoat.com -User leonmarino@bmoat.com -AccessRights FullAccess -InheritanceType All
