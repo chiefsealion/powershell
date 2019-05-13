@@ -1,0 +1,4 @@
+#Connect to Office 365
+
+#Change User's UserPrincipal Name information
+Set-MsolUserPrincipalName -UserPrincipalName "sealion@bmoat.com" -NewUserPrincipalName "leonmarino@bmoat.com"
