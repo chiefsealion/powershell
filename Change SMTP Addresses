@@ -1,0 +1,4 @@
+#connect to Office 365
+
+#Set the SMTP (Primary) and the smtp (Secondary) addresses
+Set-Mailbox -Identity "sealion" -EmailAddresses SMTP:sealion@bmoat.com, smtp:leonmarino@bmoat.com
