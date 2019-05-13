@@ -1,0 +1,4 @@
+#Connect to Office365
+
+#Change Display Name
+Set-MsolUser -UserPrincipalName sealion@bmoat.com -DisplayName "Sea Lion"
