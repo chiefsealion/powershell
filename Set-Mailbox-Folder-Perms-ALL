@@ -1,0 +1,12 @@
+#Connect to Office 365
+.\Connect-Office365.ps1
+
+
+#Edit the permissions for each user's calendar permissions to Editor
+foreach($user in Get-Mailbox -RecipientTypeDetails UserMailbox) {
+
+$cal = $user.alias+":\Calendar"
+
+Set-MailboxFolderPermission -Identity $cal -User Default -AccessRights Reviewer
+
+}
