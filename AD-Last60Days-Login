@@ -1,0 +1,3 @@
+$LastMonth = $(((Get-Date).AddDays(-30)).ToFileTime())
+
+Get-ADComputer -LDAPFilter "(lastLogonTimeStamp>=$LastMonth)" -Properties OperatingSystem,LastLogonDate
