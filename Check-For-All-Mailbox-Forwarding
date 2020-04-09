@@ -1,0 +1,5 @@
+#Connect to Office 365
+$Session1 = Connect-ExchangeOnline -UserPrincipalName chiefsealion@BMOAT.com -ShowProgress $true
+
+#Getting the Mailbox forwards and putting a .CSV file in temp folder located in the root of C:
+Get-Mailbox | select UserPrincipalName,ForwardingSmtpAddress,DeliverToMailboxAndForward | Export-csv c:\temp\users.csv -NoTypeInformation
