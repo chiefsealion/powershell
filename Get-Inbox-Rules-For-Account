@@ -1,0 +1,4 @@
+#Connect to Office 365
+
+#Get Mailbox Rules
+Get-InboxRule -Mailbox chiefsealion@BMOAT.com
