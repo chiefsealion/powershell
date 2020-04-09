@@ -1,0 +1,1 @@
+Connect-ExchangeOnline -UserPrincipalName chiefsealionADMIN@BMOAT.com -ShowProgress $true
