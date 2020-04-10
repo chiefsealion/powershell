@@ -4,8 +4,8 @@ $Session1 = Connect-ExchangeOnline -UserPrincipalName <admin> -ShowProgress $tru
 
 New-Mailbox -Shared -Name "ISO-Notifications" -DisplayName "ISO-Notifications" -Alias ISONotifications -PrimarySMTPAddress ISO-Notifications@<domain> | Set-Mailbox -HiddenFromAddressListsEnabled $true
 
-New-InboxRule -Name ISOBillingStatements -Mailbox <BillingAccount> -ForwardTo isonotifications@<domain> -SubjectContainsWords billing,statement | Set-InboxRule ISOBillingStatements -Mailbox <BillingAccount> -Priority 1
+New-InboxRule -Name ISOBillingStatements -Mailbox <BillingAccount> -ForwardTo iso-notifications@<domain> -SubjectContainsWords billing,statement | Set-InboxRule ISOBillingStatements -Mailbox <BillingAccount> -Priority 1
 
-New-InboxRule -Name ISOBillingForward -Mailbox isonotifications@<domain> -ForwardTo support@isoutsource.com -SubjectContainsWords billing,statement
+New-InboxRule -Name ISOBillingForward -Mailbox iso-notifications@<domain> -ForwardTo support@isoutsource.com -SubjectContainsWords billing,statement
 
 Get-InboxRule -Mailbox <BillingAccount>
