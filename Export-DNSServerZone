@@ -1,0 +1,1 @@
+Export-DnsServerZone -Name "chiefsealion.local" -FileName "exportedchiefsealion.local"
