@@ -1,0 +1,1 @@
+Export-DhcpServer -ComputerName "dhcpserver.bmoat.com" -File "C:\exportdir\dhcpexport.xml"
