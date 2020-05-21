@@ -1,0 +1,1 @@
+Get-GPOReport -All -Domain symmetryelect.local -Server SE-FILE -ReportType XML -Path C:\temp\GPOReportsAll.xml
