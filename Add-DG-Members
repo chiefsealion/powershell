@@ -1,0 +1,1 @@
+Add-DistributionGroupMember -Identity "Zoo Members" -Member "sealion@bmoat.com"
