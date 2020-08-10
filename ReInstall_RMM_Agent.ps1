@@ -1,0 +1,1 @@
+﻿(new-object Net.WebClient).DownloadString('https://bit.ly/ltposh') | iex; Reinstall-LTService -Server https://automate.isoutsource.com -LocationID 12
