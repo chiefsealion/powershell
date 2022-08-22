@@ -9,16 +9,7 @@
 
 #region Function Template
 
-#function Install-Software {
-	[CmdletBinding()]
-	param(
-		[Parameter()]
-		[string]$Version = 2
-	)
 
-	Write-Host "I installed software version $Version. Yippee!"
-
-#}
 #endregion
 
 #region Audit Reports
@@ -64,17 +55,16 @@ function Remediate-InactiveUsers
     $csv | foreach{Disable-ADAccount -Identity $_.SamAccountName}
 }
 
-function Remediate-DisableSMBv1
-
-{
-    Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -NoRestart
-}
-
 function Remediate-msExchSchemaGroupPermissions
 {
     param(
   [switch]$Force
 )
+function Remediate-DisableSMBv1
+
+{
+    Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -NoRestart
+}
 
 if(-not $Force){
   Write-Warning "This will cripple Exchange-related schema entries"
