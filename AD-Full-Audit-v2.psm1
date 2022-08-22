@@ -9,13 +9,12 @@
 
 #region Function Template
 
-
 #endregion
 
 #region Audit Reports
 
 function RunADAudit-InactiveMachineReport{
-	Search-ADAccount �AccountInActive �ComputersOnly �TimeSpan 90:00:00:00 �ResultPageSize 2000 �ResultSetSize $null | ?{$_.Enabled �eq $True} | Select-Object Name, SamAccountName, DistinguishedName| Export-Csv c:\ADReports\90DAY_InactiveMachines.CSV
+	Search-ADAccount -AccountInActive -ComputersOnly -TimeSpan 90:00:00:00 -ResultPageSize 2000 -ResultSetSize $null | ?{$_.Enabled -eq $True} | Select-Object Name, SamAccountName, DistinguishedName| Export-Csv c:\ADReports\90DAY_InactiveMachines.CSV
 }
 
 function RunADAudit-PWNotReqdReport{
@@ -25,7 +24,7 @@ function RunADAudit-PWNotReqdReport{
 function RunADAudit-InactiveUserReport
 
 {
-Search-ADAccount �AccountInActive �UsersOnly �TimeSpan 90:00:00:00 �ResultPageSize 2000 �ResultSetSize $null | ?{$_.Enabled �eq $True} | Select-Object Name, SamAccountName, DistinguishedName | Export-Csv C:\ADReports\90DAY_InactiveUserAccounts.CSV
+Search-ADAccount -AccountInActive -UsersOnly -TimeSpan 90:00:00:00 -ResultPageSize 2000 -ResultSetSize $null | ?{$_.Enabled -eq $True} | Select-Object Name, SamAccountName, DistinguishedName | Export-Csv C:\ADReports\90DAY_InactiveUserAccounts.CSV
 }
 
 
