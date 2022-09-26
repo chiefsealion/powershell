@@ -3,28 +3,160 @@
 ## Script Name: AD Full Audit v2
 ## Created by: Tanner Cline
 ## Script Description: This script is a function module. It will run the following examples:
-## Example 1: 
+## Last Updated: September 26, 2022
 
 #endregion
 
-#region Function Template
+#region Import Modules
+
+## Allow script to be run unblocked for the entire session
+
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
+Install-Module -Name ImportExcel -RequiredVersion 7.4.1 -Force
+Import-Module -Name ImportExcel -Force
+
+# Get a list of processes on the system
+$processes = Get-Process | Sort-Object -Property ProcessName | Group-Object -Property ProcessName | Where-Object {$_.Count -gt 2}
+
+# Export the processes to Excel, each process on its own sheet
+$processes | ForEach-Object { $_.Group | Export-Excel -Path MultiSheetExample.xlsx -WorksheetName $_.Name -AutoSize -AutoFilter }
+
+# Show the completed file
+Invoke-Item .\MultiSheetExample.xlsx
+
+
 
 #endregion
+
+
+
 
 #region Audit Reports
 
+function RunADAudit-SecurityGroups{
+
+    $excelPackage = "c:\temp\testing.xlsx"
+    Export-Excel -Path $excelPackage -AutoSize -AutoFilter
+    $Groups = (Get-AdGroup -filter * | Sort-Object -Property SamAccountName).SamAccountName
+    
+
+    Foreach ($Group in $Groups){
+
+        Get-ADGroupMember -identity $Group | select name | Export-Excel $excelPackage -WorksheetName $Group -AutoSize -AutoFilter -WarningAction SilentlyContinue
+
+    }
+
+
+}
+
 function RunADAudit-InactiveMachineReport{
 	Search-ADAccount -AccountInActive -ComputersOnly -TimeSpan 90:00:00:00 -ResultPageSize 2000 -ResultSetSize $null | ?{$_.Enabled -eq $True} | Select-Object Name, SamAccountName, DistinguishedName| Export-Csv c:\ADReports\90DAY_InactiveMachines.CSV
-}
+}#region Function Template
+#CSS codes for HTML template
+$header = @"
+<style>
+
+    h1 {
+
+        font-family: Arial, Helvetica, sans-serif;
+        color: #e68a00;
+        font-size: 28px;
+
+    }
+
+    
+    h2 {
+
+        font-family: Arial, Helvetica, sans-serif;
+        color: #000099;
+        font-size: 16px;
+
+    }
+
+    
+    
+   table {
+		font-size: 12px;
+		border: 0px; 
+		font-family: Arial, Helvetica, sans-serif;
+	} 
+	
+    td {
+		padding: 4px;
+		margin: 0px;
+		border: 0;
+	}
+	
+    th {
+        background: #395870;
+        background: linear-gradient(#49708f, #293f50);
+        color: #fff;
+        font-size: 11px;
+        text-transform: uppercase;
+        padding: 10px 15px;
+        vertical-align: middle;
+	}
+
+    tbody tr:nth-child(even) {
+        background: #f0f0f2;
+    }
+    
+
+
+    #CreationDate {
+
+        font-family: Arial, Helvetica, sans-serif;
+        color: #ff3300;
+        font-size: 12px;
+
+    }
+
+
+
+    .StopStatus {
+
+        color: #ff0000;
+    }
+    
+  
+    .RunningStatus {
+
+        color: #008000;
+    }
+
+
+
+
+</style>
+"@
+
+#The command below will get the name of the computer
+#Example: $ComputerName = "<h1>Computer name: $env:computername</h1>"
+
+#The command below will get the Operating System information, convert the result to HTML code as table and store it to a variable
+#Example #2: $OSinfo = Get-CimInstance -Class Win32_OperatingSystem | ConvertTo-Html -As List -Property Version,Caption,BuildNumber,Manufacturer -Fragment -PreContent "<h2>Operating System Information</h2>"
+
+  
+#The command below will combine all the information gathered into a single HTML report
+#Example #3: $Report = ConvertTo-HTML -Body "$ComputerName $OSinfo $ProcessInfo $BiosInfo $DiscInfo $ServicesInfo" -Head $header -Title "Computer Information Report" -PostContent "<p id='CreationDate'>Creation Date: $(Get-Date)</p>"
+
+#The command below will generate the report to an HTML file
+#Example #4: $Report | Out-File .\Basic-Computer-Information-Report.html
+
+
+#endregion
 
 function RunADAudit-PWNotReqdReport{
     get-adobject -ldapfilter "(&(objectCategory=person)(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=32))" -properties useraccountcontrol | Export-Csv c:\ADReports\PWNotReqAccounts.CSV
+    $html_PWNotReqd = get-adobject -ldapfilter "(&(objectCategory=person)(objectClass=user)(userAccountControl:1.2.840.113556.1.4.803:=32))" -properties useraccountcontrol | ConvertTo-Html -As List -Property UserAccountControl -Fragment -PreContent "<h2>Password Not Required Accounts</h2>"
 }
 
 function RunADAudit-InactiveUserReport
 
 {
-Search-ADAccount -AccountInActive -UsersOnly -TimeSpan 90:00:00:00 -ResultPageSize 2000 -ResultSetSize $null | ?{$_.Enabled -eq $True} | Select-Object Name, SamAccountName, DistinguishedName | Export-Csv C:\ADReports\90DAY_InactiveUserAccounts.CSV
+    Search-ADAccount -AccountInActive -UsersOnly -TimeSpan 90:00:00:00 -ResultPageSize 2000 -ResultSetSize $null | ?{$_.Enabled -eq $True} | Select-Object Name, SamAccountName, DistinguishedName | Export-Csv C:\ADReports\90DAY_InactiveUserAccounts.CSV
+    $html_inactiveusers = Search-ADAccount -AccountInActive -UsersOnly -TimeSpan 90:00:00:00 -ResultPageSize 2000 -ResultSetSize $null | ?{$_.Enabled -eq $True} | ConvertTo-Html -As List -Property Name, SamAccountName, DistinguishedName -Fragment -PreContent "<h2>Inactive Users</h2>"
 }
 
 
@@ -65,6 +197,8 @@ function Remediate-DisableSMBv1
     Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -NoRestart
 }
 
+function Remediate-msExchSchemaGroupPermissions{
+
 if(-not $Force){
   Write-Warning "This will cripple Exchange-related schema entries"
   Write-Warning "DO NOT run this if you have an active Exchange organization in the current forest"
@@ -97,6 +231,18 @@ Set-ADObject -Identity $schemaObject.distinguishedName -Remove @{possSuperiors =
 
 # Refresh schema
 & $schemaRefresh
+}
+
+function Remediate-NoAdminDelegation
+{
+    Get-ADGroupMember "Domain Admins" |
+    get-aduser -Properties AccountNotDelegated |
+    Where-Object {
+    -not $_.AccountNotDelegated -and
+    $_.objectClass -eq "user" -and
+    $_.displayName -match '.*\wOff'
+    } |
+    Set-ADUser -AccountNotDelegated $true
 }
 
 
